@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
        <title>Crime Map</title>
-       <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}" />
+       <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='css/style.css')   }}" />
        <script type="text/javascript"
             src="https://maps.googleapis.com/maps/api/js">
         </script>
@@ -15,7 +15,20 @@
                 };
                 map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
                 google.maps.event.addListener(map, 'click', function(event) {placeMarker(event.latLng);});
+                placeCrimes({{crimes | safe}});
             }
+
+            function placeCrimes(crimes) {
+                for (i=0; i<crimes.length; i++) {
+                    crime = new google.maps.Marker( {
+                        position: new google.maps.LatLng(crimes[i].latitude, crimes[i].longitude),
+                        map: map,
+                        title: crimes[i].date + "\n" +
+                        crimes[i].category + "\n" + crimes[i].description
+                    });
+                }
+            }
+
 
             function placeMarker(location) {
                 if (marker) {
@@ -33,7 +46,7 @@
    </head>
 
 <body onload="initialize()">
-    <h1>CrimeMap</h1>
+    <h1>RGB Software Lab's CrimeMap</h1>
     <p>A map of recent criminal activity in the Quezon City area.</p>
     <div id="map-canvas"></div>
     <div id="newcrimeform">
